@@ -1,15 +1,14 @@
 import AppKit
 import Carbon.HIToolbox
-import ServiceManagement
+import SwiftUI
 
 final class ActionItem: NSMenuItem {
     let handler: () -> Void
 
-    init(_ title: String, checked: Bool = false, handler: @escaping () -> Void) {
+    init(_ title: String, key: String = "", handler: @escaping () -> Void) {
         self.handler = handler
-        super.init(title: title, action: #selector(fire), keyEquivalent: "")
+        super.init(title: title, action: #selector(fire), keyEquivalent: key)
         target = self
-        state = checked ? .on : .off
     }
 
     required init(coder: NSCoder) { fatalError("init(coder:) is not supported") }
@@ -17,18 +16,33 @@ final class ActionItem: NSMenuItem {
     @objc func fire() { handler() }
 }
 
-@MainActor final class App: NSObject, NSApplicationDelegate {
+@MainActor final class App: NSObject, NSApplicationDelegate, NSWindowDelegate, ObservableObject {
     var statusItem: NSStatusItem!
     let hud = Hud()
-    var hotKey = Settings.hotKey
-    var status = "Prêt"
+    @Published var hotKey = Settings.hotKey
+    @Published var status = "Prêt"
+    @Published var recording = false
+    @Published var recordingProblem: String?
+    var recorder: Any?
     var busy = false
-    var recording: Task<Void, Never>?
     var serviceResult: Result<Int, any Error>?
+
+    lazy var settingsWindow: NSWindow = {
+        let controller = NSHostingController(rootView: SettingsView(app: self))
+        controller.sceneBridgingOptions = [.title, .toolbars]
+        let window = NSWindow(contentViewController: controller)
+        window.styleMask = [.titled, .closable, .miniaturizable, .fullSizeContentView]
+        window.toolbarStyle = .unified
+        window.setContentSize(NSSize(width: 720, height: 500))
+        window.isReleasedWhenClosed = false
+        window.delegate = self
+        window.center()
+        return window
+    }()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.title = "✎"
+        statusItem.button?.image = icon(busy: false)
         NSApp.servicesProvider = self
         NSUpdateDynamicServices()
         AXIsProcessTrustedWithOptions(["AXTrustedCheckOptionPrompt": true] as CFDictionary)
@@ -43,46 +57,33 @@ final class ActionItem: NSMenuItem {
         buildMenu()
     }
 
-    // A full menu bar hides the icon behind the notch, so opening the app again shows its menu at the pointer.
+    // A full menu bar hides the icon behind the notch, so opening the app again shows its settings.
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        DispatchQueue.main.async { self.statusItem.menu?.popUp(positioning: nil, at: NSEvent.mouseLocation, in: nil) }
+        showSettings()
         return false
+    }
+
+    func applicationDidResignActive(_ notification: Notification) { stopRecording() }
+
+    func windowWillClose(_ notification: Notification) { stopRecording() }
+
+    func showSettings() {
+        NSApp.activate()
+        settingsWindow.makeKeyAndOrderFront(nil)
+    }
+
+    func icon(busy: Bool) -> NSImage? {
+        NSImage(systemSymbolName: busy ? "ellipsis.circle" : "pencil.and.scribble", accessibilityDescription: "Reformule")
     }
 
     func buildMenu() {
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: status, action: nil, keyEquivalent: ""))
         menu.addItem(.separator())
-        menu.addItem(choice("Modèle", Settings.model, \.label) { Settings.model = $0 })
-        menu.addItem(choice("Effort", Settings.effort, \.label) { Settings.effort = $0 })
-        menu.addItem(choice("Mode", Settings.mode, \.label) { Settings.mode = $0 })
-        menu.addItem(ActionItem("Raccourci : \(hotKey.label)…") { self.startRecording() })
-        menu.addItem(ActionItem("Lancer à l'ouverture de session", checked: SMAppService.mainApp.status == .enabled) { self.toggleLogin() })
+        menu.addItem(ActionItem("Réglages…", key: ",") { self.showSettings() })
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "Quitter Reformule", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         statusItem.menu = menu
-    }
-
-    func choice<T: CaseIterable & Equatable>(_ title: String, _ current: T, _ label: (T) -> String, set: @escaping (T) -> Void) -> NSMenuItem {
-        let item = NSMenuItem(title: "\(title) : \(label(current))", action: nil, keyEquivalent: "")
-        let submenu = NSMenu()
-        for value in T.allCases {
-            submenu.addItem(ActionItem(label(value), checked: value == current) {
-                set(value)
-                self.buildMenu()
-            })
-        }
-        item.submenu = submenu
-        return item
-    }
-
-    func toggleLogin() {
-        do {
-            if SMAppService.mainApp.status == .enabled { try SMAppService.mainApp.unregister() } else { try SMAppService.mainApp.register() }
-        } catch {
-            report(error.localizedDescription)
-        }
-        buildMenu()
     }
 
     func report(_ message: String, beep: Bool = true) {
@@ -91,43 +92,40 @@ final class ActionItem: NSMenuItem {
         buildMenu()
     }
 
+    // Recording reads keys from the settings window, so it works before Accessibility is granted.
     func startRecording() {
-        guard keyTap != nil else { return report("Autoriser d'abord Reformule dans Accessibilité") }
-        hud.show("Tape le nouveau raccourci (Échap pour annuler)", busy: false)
-        recording = Task {
-            try? await Task.sleep(for: .seconds(10))
-            guard !Task.isCancelled else { return }
-            finishRecording(nil)
+        recordingProblem = nil
+        recording = true
+        recorder = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+            if let cgEvent = event.cgEvent {
+                let key = HotKey(cgEvent)
+                MainActor.assumeIsolated { self.record(key) }
+            }
+            return nil
         }
     }
 
-    func finishRecording(_ key: HotKey?) {
-        recording?.cancel()
-        recording = nil
-        if let key {
+    func record(_ key: HotKey) {
+        if key.keyCode == Int64(kVK_Escape) {
+            stopRecording()
+        } else if let problem = key.problem {
+            recordingProblem = problem
+        } else {
             hotKey = key
             Settings.hotKey = key
-            hud.show("Raccourci : \(key.label)", busy: false)
-            hud.hide(after: .seconds(1.5))
-        } else {
-            hud.hide()
+            stopRecording()
         }
-        buildMenu()
+    }
+
+    func stopRecording() {
+        if let recorder { NSEvent.removeMonitor(recorder) }
+        recorder = nil
+        recording = false
+        recordingProblem = nil
     }
 
     func handle(_ event: CGEvent) -> Bool {
-        if recording != nil {
-            let key = HotKey(event)
-            if key.keyCode == Int64(kVK_Escape) {
-                finishRecording(nil)
-            } else if let problem = key.problem {
-                hud.show(problem, busy: false)
-            } else {
-                finishRecording(key)
-            }
-            return true
-        }
-        guard hotKey.matches(event) else { return false }
+        guard !recording, hotKey.matches(event) else { return false }
         if event.getIntegerValueField(.keyboardEventAutorepeat) == 0 { Task { await run() } }
         return true
     }
@@ -136,7 +134,7 @@ final class ActionItem: NSMenuItem {
         guard !busy else { return }
         guard AXIsProcessTrusted() else { return report("Autoriser Reformule dans Réglages > Confidentialité et sécurité > Accessibilité") }
         busy = true
-        statusItem.button?.title = "…"
+        statusItem.button?.image = icon(busy: true)
         hud.show("Reformulation…", busy: true)
         let pasteboard = NSPasteboard.general
         let saved: [NSPasteboardItem] = (pasteboard.pasteboardItems ?? []).map { item in
@@ -176,7 +174,7 @@ final class ActionItem: NSMenuItem {
             pasteboard.clearContents()
             pasteboard.writeObjects(saved)
         }
-        statusItem.button?.title = "✎"
+        statusItem.button?.image = icon(busy: false)
         busy = false
     }
 

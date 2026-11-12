@@ -29,13 +29,11 @@ tccutil reset Accessibility io.github.mickadoua.reformule
 
 ## Réglages
 
-Tout se règle depuis l'icône ✎ de la barre des menus. Si l'encoche la cache, rouvrir Reformule (Spotlight, Finder ou `open ~/Applications/Reformule.app`) affiche le même menu sous le pointeur :
+Tout se règle dans la fenêtre Réglages, ouverte par l'icône de la barre des menus (Réglages…, ⌘,) ou en rouvrant Reformule depuis Spotlight ou le Finder, utile quand l'encoche cache l'icône :
 
-- **Modèle** : Fable, Opus (par défaut), Sonnet ou Haiku, dans leur dernière version via les alias de Claude Code
-- **Effort** : low (par défaut), medium ou high
-- **Mode** : corriger et reformuler, ou corriger seulement
-- **Raccourci** : enregistré au clavier, en distinguant les touches de gauche et de droite
-- **Lancement à l'ouverture de session**
+- **Général** : lancement à l'ouverture de session, état de l'autorisation Accessibilité
+- **Correction** : modèle (Fable, Opus par défaut, Sonnet ou Haiku, dans leur dernière version via les alias de Claude Code), effort (faible par défaut, moyen ou élevé), mode (corriger et reformuler, ou corriger seulement)
+- **Raccourcis** : raccourci enregistré au clavier, en distinguant les touches de gauche et de droite, et rappel des Services du clic droit
 
 ## Fonctionnement
 

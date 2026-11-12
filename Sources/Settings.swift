@@ -16,13 +16,23 @@ enum Model: String, CaseIterable {
 enum Effort: String, CaseIterable {
     case low, medium, high
 
-    var label: String { rawValue }
+    var label: String {
+        switch self {
+        case .low: "Faible"
+        case .medium: "Moyen"
+        case .high: "Élevé"
+        }
+    }
 }
 
 enum Mode: String, CaseIterable {
     case rewrite, proofread
 
     var label: String { self == .rewrite ? "Corriger et reformuler" : "Corriger seulement" }
+
+    var summary: String {
+        self == .rewrite ? "Orthographe, grammaire, ponctuation et tournures plus naturelles" : "Orthographe, grammaire et ponctuation, en changeant le moins de mots possible"
+    }
 
     var task: String {
         switch self {
