@@ -128,6 +128,8 @@ h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -0.025em; line-heigh
 .blocks .k { flex: none; font-size: 11.5px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; width: 96px; }
 .tok { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.86em; background: var(--accent-soft); color: var(--accent); padding: 1px 6px; border-radius: 5px; }
 
+.cardshot { display: flex; justify-content: center; }
+.cardshot img { display: block; max-width: 100%; height: auto; filter: drop-shadow(0 24px 40px rgba(30, 30, 80, 0.25)); }
 .window { border-radius: 16px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); background: var(--card); max-width: 780px; margin: 0 auto; }
 .window img { display: block; width: 100%; height: auto; }
 
@@ -243,12 +245,12 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <div class="card">
         <div class="icon i1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 10h.01M10 10h.01M13.5 10h.01M17 10h.01M8 14h8"/></svg></div>
         <h3>Keyboard shortcut</h3>
-        <p>Right ⌘ + / by default, or any combination you like. Corrects the selection, or the whole field when nothing is selected, then pastes the result back.</p>
+        <p>Right ⌘ + / by default, or any combination you like. Corrects the selection, or the whole field when nothing is selected, and shows the changes in a card first.</p>
       </div>
       <div class="card">
         <div class="icon i2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="13" height="15" rx="2.5"/><path d="M6.5 7.5h6M6.5 11h6M6.5 14.5h3.5"/><path d="m14 13 7 2.6-3 1.2-1.2 3z" fill="currentColor"/></svg></div>
         <h3>Right-click</h3>
-        <p>Two entries in the Services menu of any selection, to correct and rephrase or to correct only. The clipboard is never touched.</p>
+        <p>Two entries in the Services menu of any selection, to correct and rephrase or to correct only. They replace the selection directly, without touching the clipboard.</p>
       </div>
       <div class="card">
         <div class="icon i3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h10M4 17h7"/><path d="m15 17 2 2 4-4"/></svg></div>
@@ -259,7 +261,28 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   </div>
 </section>
 
-<section id="formatting">
+<section id="review">
+  <div class="wrap split">
+    <div>
+      <p class="kicker">Review</p>
+      <h2>See every change before it lands.</h2>
+      <p class="intro">The suggestion appears in a card right next to the text, with deletions struck through and additions highlighted. Nothing is replaced until you say so.</p>
+      <ul class="checks">
+        <li><strong>Return or Remplacer</strong> pastes the corrected text, formatting included.</li>
+        <li><strong>Esc, a click elsewhere or typing</strong> dismisses the card and leaves the text alone.</li>
+        <li><strong>The clipboard comes back</strong> exactly as it was, either way.</li>
+      </ul>
+    </div>
+    <div class="cardshot">
+      <picture>
+        <source srcset="carte-sombre.png" media="(prefers-color-scheme: dark)">
+        <img src="carte-clair.png" width="400" height="260" alt="Reformule suggestion card: deletions struck through in red, additions highlighted in green, with Ignorer and Remplacer buttons" loading="lazy">
+      </picture>
+    </div>
+  </div>
+</section>
+
+<section id="formatting" class="alt">
   <div class="wrap split">
     <div>
       <p class="kicker">Formatting</p>
@@ -284,7 +307,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   </div>
 </section>
 
-<section class="alt">
+<section>
   <div class="wrap">
     <p class="kicker">Settings</p>
     <h2>One window, every choice.</h2>
@@ -298,7 +321,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   </div>
 </section>
 
-<section>
+<section class="alt">
   <div class="wrap">
     <p class="kicker">How it works</p>
     <h2>Five steps, a few seconds.</h2>
@@ -308,12 +331,12 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <li><div><strong>Split</strong><p>The content becomes a list of blocks; URLs and code are replaced by tokens.</p></div></li>
       <li><div><strong>Correct</strong><p>Claude Code receives the blocks and returns as many, with no tools, MCP servers or personal settings.</p></div></li>
       <li><div><strong>Check</strong><p>A block whose formatting changed is kept as it was.</p></div></li>
-      <li><div><strong>Paste</strong><p>HTML, RTF and plain text are rebuilt and pasted, then the original clipboard is restored.</p></div></li>
+      <li><div><strong>Review</strong><p>The changes appear in a card next to the text. Return pastes the rebuilt HTML, RTF and plain text, Esc dismisses them; the original clipboard is restored either way.</p></div></li>
     </ol>
   </div>
 </section>
 
-<section id="install" class="alt">
+<section id="install">
   <div class="wrap split">
     <div>
       <p class="kicker">Install</p>
@@ -335,7 +358,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   </div>
 </section>
 
-<section>
+<section class="alt">
   <div class="wrap two">
     <div class="card">
       <h3>Privacy</h3>

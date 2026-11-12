@@ -6,7 +6,9 @@ MainActor.assumeIsolated {
     if CommandLine.arguments.contains("--pasteboard") {
         Task {
             do {
-                print("blocs laissés tel quel : \(try await rewritePasteboard(.general, Settings.options))")
+                let correction = try await correct(.general, Settings.options)
+                write(correction.item, to: .general)
+                print("blocs laissés tel quel : \(correction.failures)")
                 exit(0)
             } catch {
                 print(error.localizedDescription)

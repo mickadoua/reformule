@@ -63,7 +63,14 @@ func rewrite(_ doc: inout Document, _ options: Options) async throws -> Int {
     return failures
 }
 
-@MainActor func rewritePasteboard(_ pasteboard: NSPasteboard, _ options: Options) async throws -> Int {
+struct Correction {
+    let item: NSPasteboardItem
+    let failures: Int
+    let before: String
+    let after: String
+}
+
+@MainActor func correct(_ pasteboard: NSPasteboard, _ options: Options) async throws -> Correction {
     let richTypes: [NSPasteboard.PasteboardType] = [.html, .rtf, .rtfd, .init("com.apple.flat-rtfd")]
     var doc: Document
     var isRich = false
@@ -78,6 +85,7 @@ func rewrite(_ doc: inout Document, _ options: Options) async throws -> Int {
     } else {
         throw Failure("Aucun texte copié")
     }
+    let original = doc
     let failures = try await rewrite(&doc, options)
     let item = NSPasteboardItem()
     if isRich {
@@ -93,7 +101,10 @@ func rewrite(_ doc: inout Document, _ options: Options) async throws -> Int {
     } else {
         item.setString(plainText(doc), forType: .string)
     }
+    return Correction(item: item, failures: failures, before: displayText(original), after: displayText(doc))
+}
+
+@MainActor func write(_ item: NSPasteboardItem, to pasteboard: NSPasteboard) {
     pasteboard.clearContents()
     pasteboard.writeObjects([item])
-    return failures
 }

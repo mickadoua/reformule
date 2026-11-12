@@ -141,6 +141,30 @@ func plainText(_ doc: Document) -> String {
     }.joined(separator: "\n")
 }
 
+func displayText(_ doc: Document) -> String {
+    doc.blocks.map { block in
+        let resolved = { (text: String) in
+            text.replacing(#/⟦(\d+)⟧/#) { match in
+                switch doc[match.1] {
+                case .code(let code): code
+                case .literal(let text): text
+                }
+            }
+        }
+        switch block.kind {
+        case .line(let prefix):
+            return prefix + resolved(block.text)
+        case .paragraph, .list:
+            let text = resolved(block.text
+                .replacing(#/\*\*(.+?)\*\*/#) { String($0.1) }
+                .replacing(#/\*(.+?)\*/#) { String($0.1) }
+                .replacing(#/\[([^\]]*)\]\(⟦\d+⟧\)/#) { String($0.1) })
+            guard case .list(_, let depth) = block.kind else { return text }
+            return String(repeating: "    ", count: depth - 1) + "•  " + text
+        }
+    }.joined(separator: "\n").trimmingCharacters(in: .newlines)
+}
+
 func rebase(_ text: NSMutableAttributedString, _ base: NSFont) {
     let manager = NSFontManager.shared
     text.enumerateAttribute(.font, in: NSRange(location: 0, length: text.length)) { value, range, _ in
