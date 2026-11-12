@@ -63,8 +63,7 @@ func rewrite(_ doc: inout Document, _ options: Options) async throws -> Int {
     return failures
 }
 
-@MainActor func rewritePasteboard(_ options: Options) async throws -> Int {
-    let pasteboard = NSPasteboard.general
+@MainActor func rewritePasteboard(_ pasteboard: NSPasteboard, _ options: Options) async throws -> Int {
     let richTypes: [NSPasteboard.PasteboardType] = [.html, .rtf, .rtfd, .init("com.apple.flat-rtfd")]
     var doc: Document
     var isRich = false

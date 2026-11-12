@@ -4,6 +4,8 @@ Corrige et reformule le texte du champ actif, dans n'importe quelle app macOS, s
 
 Un raccourci (⌘ droit + / par défaut) copie la sélection, ou tout le champ s'il n'y en a pas, la fait corriger par Claude via Claude Code, puis recolle le résultat à la place. Le gras, l'italique, les liens, le code et les listes sont conservés.
 
+Les mêmes corrections sont proposées au clic droit sur une sélection, dans le sous-menu Services : « Reformuler avec Claude » et « Corriger avec Claude ». Elles remplacent la sélection sans passer par le presse-papiers et ne demandent pas l'autorisation Accessibilité. Si elles n'apparaissent pas, les activer dans Réglages Système > Clavier > Raccourcis clavier > Services > Texte.
+
 ## Prérequis
 
 - macOS 26 sur Apple silicon
@@ -53,6 +55,7 @@ Le texte est envoyé à Anthropic par Claude Code, avec le compte connecté, et 
 - Le souligné, le barré et les couleurs sont perdus.
 - Les mentions (@quelqu'un) de Slack ou Jira ne reçoivent pas de traitement particulier.
 - Dans VS Code et JetBrains, ⌘C sans sélection copie la ligne courante : c'est elle qui est corrigée.
+- Les apps qui remplacent le menu contextuel, comme beaucoup d'apps Electron, n'affichent pas les Services : seul le raccourci y fonctionne.
 
 ## Tester sans raccourci
 

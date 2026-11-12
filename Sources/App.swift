@@ -24,10 +24,13 @@ final class ActionItem: NSMenuItem {
     var status = "Prêt"
     var busy = false
     var recording: Task<Void, Never>?
+    var serviceResult: Result<Int, any Error>?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem.button?.title = "✎"
+        NSApp.servicesProvider = self
+        NSUpdateDynamicServices()
         AXIsProcessTrustedWithOptions(["AXTrustedCheckOptionPrompt": true] as CFDictionary)
         if !installKeyTap() {
             status = "En attente de l'autorisation Accessibilité"
@@ -150,7 +153,7 @@ final class ActionItem: NSMenuItem {
                 try press("c")
                 guard try await copied(pasteboard, since: count, within: 50) else { throw Failure("Rien n'a été copié") }
             }
-            let failures = try await rewritePasteboard(Settings.options)
+            let failures = try await rewritePasteboard(pasteboard, Settings.options)
             guard NSWorkspace.shared.frontmostApplication?.processIdentifier == target else {
                 keepResult = true
                 throw Failure("App changée pendant la correction : le résultat est dans le presse-papiers")
@@ -158,10 +161,24 @@ final class ActionItem: NSMenuItem {
             try press("v")
             // Electron apps read the pasteboard asynchronously after ⌘V.
             try await Task.sleep(for: .milliseconds(600))
-            if failures > 0 { problem = "\(failures) bloc(s) laissé(s) tel quel : mise en forme non respectée" }
+            problem = keptBlocks(failures)
         } catch {
             problem = error.localizedDescription
         }
+        finish(problem)
+        if !keepResult {
+            pasteboard.clearContents()
+            pasteboard.writeObjects(saved)
+        }
+        statusItem.button?.title = "✎"
+        busy = false
+    }
+
+    func keptBlocks(_ failures: Int) -> String? {
+        failures > 0 ? "\(failures) bloc(s) laissé(s) tel quel : mise en forme non respectée" : nil
+    }
+
+    func finish(_ problem: String?) {
         report(problem ?? "Corrigé", beep: problem != nil)
         if let problem {
             hud.show(problem, busy: false)
@@ -169,11 +186,39 @@ final class ActionItem: NSMenuItem {
         } else {
             hud.hide()
         }
-        if !keepResult {
-            pasteboard.clearContents()
-            pasteboard.writeObjects(saved)
+    }
+
+    @objc func rewrite(_ pasteboard: NSPasteboard, userData: String?, error: AutoreleasingUnsafeMutablePointer<NSString?>) {
+        serve(pasteboard, .rewrite, error)
+    }
+
+    @objc func proofread(_ pasteboard: NSPasteboard, userData: String?, error: AutoreleasingUnsafeMutablePointer<NSString?>) {
+        serve(pasteboard, .proofread, error)
+    }
+
+    // A service must fill the pasteboard before returning, so the main run loop is spun until Claude answers.
+    func serve(_ pasteboard: NSPasteboard, _ mode: Mode, _ error: AutoreleasingUnsafeMutablePointer<NSString?>) {
+        guard !busy else {
+            error.pointee = "Une correction est déjà en cours"
+            return
         }
-        statusItem.button?.title = "✎"
+        busy = true
+        hud.show("Reformulation…", busy: true)
+        let options = Options(model: Settings.model, effort: Settings.effort, mode: mode)
+        serviceResult = nil
+        Task {
+            do { serviceResult = .success(try await rewritePasteboard(pasteboard, options)) } catch { serviceResult = .failure(error) }
+        }
+        while serviceResult == nil { RunLoop.current.run(mode: .default, before: .now + 0.05) }
+        switch serviceResult {
+        case .success(let failures):
+            finish(keptBlocks(failures))
+        case .failure(let failure):
+            error.pointee = failure.localizedDescription as NSString
+            finish(failure.localizedDescription)
+        case nil:
+            break
+        }
         busy = false
     }
 }
