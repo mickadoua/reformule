@@ -22,7 +22,7 @@
 			<key>NSMenuItem</key>
 			<dict>
 				<key>default</key>
-				<string>Reformuler avec Claude</string>
+				<string>Reformule : corriger et reformuler</string>
 			</dict>
 			<key>NSMessage</key>
 			<string>rewrite</string>
@@ -49,7 +49,7 @@
 			<key>NSMenuItem</key>
 			<dict>
 				<key>default</key>
-				<string>Corriger avec Claude</string>
+				<string>Reformule : corriger seulement</string>
 			</dict>
 			<key>NSMessage</key>
 			<string>proofread</string>

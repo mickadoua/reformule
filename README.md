@@ -4,7 +4,7 @@ Corrige et reformule le texte du champ actif, dans n'importe quelle app macOS, s
 
 Un raccourci (⌘ droit + / par défaut) copie la sélection, ou tout le champ s'il n'y en a pas, la fait corriger par Claude via Claude Code, puis recolle le résultat à la place. Le gras, l'italique, les liens, le code et les listes sont conservés.
 
-Les mêmes corrections sont proposées au clic droit sur une sélection, dans le sous-menu Services : « Reformuler avec Claude » et « Corriger avec Claude ». Elles remplacent la sélection sans passer par le presse-papiers et ne demandent pas l'autorisation Accessibilité. Si elles n'apparaissent pas, les activer dans Réglages Système > Clavier > Raccourcis clavier > Services > Texte.
+Les mêmes corrections sont proposées au clic droit sur une sélection, dans le sous-menu Services : « Reformule : corriger et reformuler » et « Reformule : corriger seulement ». Elles remplacent la sélection sans passer par le presse-papiers et ne demandent pas l'autorisation Accessibilité. Si elles n'apparaissent pas, les activer dans Réglages Système > Clavier > Raccourcis clavier > Services > Texte.
 
 ## Prérequis
 
