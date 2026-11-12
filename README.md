@@ -2,9 +2,9 @@
 
 Corrects and rephrases the text of the focused field, in any macOS app, without losing its formatting. [Website](https://mickadoua.github.io/reformule/)
 
-A shortcut (right ⌘ + / by default) copies the selection, or the whole field when nothing is selected, has it corrected by Claude through Claude Code, then pastes the result back in place. Bold, italic, links, code and lists are kept.
+A shortcut (right ⌘ + / by default) copies the selection, or the whole field when nothing is selected, has it corrected by Claude through Claude Code, then shows the changes in a card next to the text: deletions struck through, additions highlighted. Return or Remplacer pastes the corrected text in place; Esc, a click elsewhere or typing dismisses it. Bold, italic, links, code and lists are kept.
 
-The same corrections are available from the right-click menu on a selection, under Services: "Reformule : corriger et reformuler" (correct and rephrase) and "Reformule : corriger seulement" (correct only). They replace the selection without going through the clipboard and do not need the Accessibility permission. If they do not show up, enable them in System Settings > Keyboard > Keyboard Shortcuts > Services > Text.
+The same corrections are available from the right-click menu on a selection, under Services: "Reformule : corriger et reformuler" (correct and rephrase) and "Reformule : corriger seulement" (correct only). They replace the selection directly, without a card, without going through the clipboard and do not need the Accessibility permission. If they do not show up, enable them in System Settings > Keyboard > Keyboard Shortcuts > Services > Text.
 
 The app interface is in French for now. Text is corrected in its own language and never translated.
 
@@ -45,7 +45,7 @@ Everything is set in the Settings window, opened from the menu bar icon (Réglag
 2. It splits the content into blocks (paragraphs, bullets, numbered items) and keeps the structure itself. URLs and code are replaced by tokens the model must copy back.
 3. `claude -p` receives the blocks and returns as many corrected blocks, as JSON. The call uses no tools, no MCP servers, no CLAUDE.md and none of the user's hooks.
 4. A block whose formatting markers or tokens changed is left as it was.
-5. Reformule rebuilds the HTML, RTF and plain text, pastes with ⌘V, then restores the original clipboard.
+5. Reformule shows the changes in a card next to the selection, placed from the Accessibility text bounds, or under the pointer when the app does not expose them. On Return it rebuilds the HTML, RTF and plain text and pastes them with ⌘V. The original clipboard is restored either way.
 
 ## Privacy
 
