@@ -1,6 +1,6 @@
 # Reformule
 
-Corrige et reformule le texte du champ actif, dans n'importe quelle app macOS, sans perdre la mise en forme.
+Corrige et reformule le texte du champ actif, dans n'importe quelle app macOS, sans perdre la mise en forme. [Page de présentation](https://mickadoua.github.io/reformule/)
 
 Un raccourci (⌘ droit + / par défaut) copie la sélection, ou tout le champ s'il n'y en a pas, la fait corriger par Claude via Claude Code, puis recolle le résultat à la place. Le gras, l'italique, les liens, le code et les listes sont conservés.
 
