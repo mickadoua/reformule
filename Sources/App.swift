@@ -43,6 +43,12 @@ final class ActionItem: NSMenuItem {
         buildMenu()
     }
 
+    // A full menu bar hides the icon behind the notch, so opening the app again shows its menu at the pointer.
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        DispatchQueue.main.async { self.statusItem.menu?.popUp(positioning: nil, at: NSEvent.mouseLocation, in: nil) }
+        return false
+    }
+
     func buildMenu() {
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: status, action: nil, keyEquivalent: ""))
