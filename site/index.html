@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reformule</title>
+<meta name="description" content="Reformule corrige et reformule le texte de n'importe quel champ sur macOS, d'un raccourci ou d'un clic droit, sans casser la mise en forme.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%238f8dff'/%3E%3Cstop offset='1' stop-color='%235e5ce6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M12 45c4-7 9-10 11-7s-4 8 0 9 8-5 11-8' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M34 38 49 23a3.2 3.2 0 0 1 4.5 4.5L38.5 42.5 32 44z' fill='none' stroke='white' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #fbfbfd;
+  --bg-alt: #f2f2f7;
+  --fg: #1d1d1f;
+  --muted: #6e6e73;
+  --card: #ffffff;
+  --line: rgba(0, 0, 0, 0.08);
+  --accent: #5e5ce6;
+  --accent-soft: rgba(94, 92, 230, 0.1);
+  --wrong: #ff3b30;
+  --right: rgba(52, 199, 89, 0.2);
+  --code-bg: rgba(0, 0, 0, 0.05);
+  --shadow: 0 30px 80px -30px rgba(30, 30, 80, 0.35), 0 8px 24px -12px rgba(0, 0, 0, 0.15);
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0b0f;
+    --bg-alt: #141418;
+    --fg: #f5f5f7;
+    --muted: #a1a1a6;
+    --card: #1c1c1e;
+    --line: rgba(255, 255, 255, 0.1);
+    --accent: #8583ff;
+    --accent-soft: rgba(133, 131, 255, 0.14);
+    --wrong: #ff6961;
+    --right: rgba(48, 209, 88, 0.22);
+    --code-bg: rgba(255, 255, 255, 0.08);
+    --shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 17px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+code, pre { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+
+nav { position: sticky; top: 0; z-index: 10; backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); background: color-mix(in srgb, var(--bg) 75%, transparent); border-bottom: 1px solid var(--line); }
+nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 650; color: var(--fg); }
+.brand:hover { text-decoration: none; }
+.brand svg { width: 28px; height: 28px; }
+nav ul { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; font-size: 15px; }
+nav ul a { color: var(--muted); }
+nav ul a:hover { color: var(--fg); text-decoration: none; }
+
+.hero { text-align: center; padding: 88px 0 40px; }
+.hero .logo { display: block; width: 88px; height: 88px; margin: 0 auto 26px; filter: drop-shadow(0 14px 28px rgba(94, 92, 230, 0.35)); }
+.eyebrow { display: inline-block; font-size: 14px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 5px 12px; border-radius: 999px; margin-bottom: 20px; }
+h1 { font-size: clamp(2.4rem, 6.4vw, 4.4rem); line-height: 1.04; letter-spacing: -0.035em; margin: 0 auto 22px; max-width: 14ch; font-weight: 750; }
+h1 em { font-style: normal; background: linear-gradient(120deg, #8f8dff, #5e5ce6 45%, #bf5af2); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lede { font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: var(--muted); max-width: 40em; margin: 0 auto 34px; }
+.cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; font-weight: 600; font-size: 16px; border: 1px solid transparent; }
+.btn:hover { text-decoration: none; }
+.btn.primary { background: var(--accent); color: #fff; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ghost { border-color: var(--line); color: var(--fg); background: var(--card); }
+
+.demo { display: grid; grid-template-columns: 1fr auto 1fr; gap: 22px; align-items: center; margin: 64px 0 14px; text-align: left; }
+.msg { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px; box-shadow: var(--shadow); font-size: 15.5px; line-height: 1.6; }
+.msg header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.tag { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border-radius: 6px; }
+.before .tag { background: rgba(255, 59, 48, 0.12); color: var(--wrong); }
+.after .tag { background: var(--right); color: #1f9d48; }
+@media (prefers-color-scheme: dark) { .after .tag { color: #4cd964; } }
+.msg p { margin: 0 0 10px; }
+.msg ul { margin: 0 0 10px; padding-left: 22px; }
+.msg li { margin: 2px 0; }
+.msg code { background: var(--code-bg); padding: 1px 6px; border-radius: 5px; font-size: 0.88em; }
+.msg a { text-decoration: underline; text-underline-offset: 2px; }
+.x { text-decoration: underline wavy var(--wrong); text-decoration-skip-ink: none; text-underline-offset: 3px; }
+.ok { background: var(--right); border-radius: 4px; padding: 0 2px; }
+.bridge { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.keys { display: flex; gap: 6px; }
+.key { display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 38px; padding: 0 10px; border-radius: 9px; background: var(--card); border: 1px solid var(--line); box-shadow: 0 2px 0 var(--line); font-size: 15px; font-weight: 600; color: var(--fg); }
+.hud { display: inline-flex; align-items: center; gap: 9px; padding: 9px 15px; border-radius: 999px; background: rgba(30, 30, 34, 0.86); color: #fff; font-size: 13px; font-weight: 500; white-space: nowrap; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5); }
+.spin { width: 13px; height: 13px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.25); border-top-color: #fff; animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.arrow { color: var(--muted); font-size: 22px; line-height: 1; }
+.caption { text-align: center; color: var(--muted); font-size: 14px; }
+
+section { padding: 84px 0; }
+section.alt { background: var(--bg-alt); }
+.kicker { color: var(--accent); font-weight: 650; font-size: 15px; margin: 0 0 8px; }
+h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -0.025em; line-height: 1.12; margin: 0 0 16px; font-weight: 720; }
+.intro { color: var(--muted); max-width: 42em; margin: 0 0 40px; font-size: 1.08rem; }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 26px; }
+.card h3 { margin: 16px 0 8px; font-size: 1.15rem; letter-spacing: -0.01em; }
+.card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+.icon { width: 44px; height: 44px; border-radius: 11px; display: grid; place-items: center; color: #fff; }
+.icon svg { width: 24px; height: 24px; }
+.i1 { background: linear-gradient(#bf7af5, #a550e8); }
+.i2 { background: linear-gradient(#5ac8fa, #2f9be0); }
+.i3 { background: linear-gradient(#8f8dff, #5e5ce6); }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; padding: 0; list-style: none; }
+.chips li { background: var(--card); border: 1px solid var(--line); padding: 6px 13px; border-radius: 999px; font-size: 14.5px; }
+.checks { list-style: none; padding: 0; margin: 0; }
+.checks li { position: relative; padding-left: 30px; margin: 0 0 12px; color: var(--muted); }
+.checks li strong { color: var(--fg); font-weight: 600; }
+.checks li::before { content: ""; position: absolute; left: 0; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: var(--accent-soft); }
+.checks li::after { content: ""; position: absolute; left: 6px; top: 8px; width: 6px; height: 9px; border: solid var(--accent); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
+.blocks { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px; font-size: 14.5px; }
+.blocks .b { display: flex; gap: 12px; align-items: baseline; padding: 10px 12px; border-radius: 10px; background: var(--bg-alt); margin-bottom: 8px; }
+.blocks .b:last-child { margin-bottom: 0; }
+.blocks .k { flex: none; font-size: 11.5px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; width: 96px; }
+.tok { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.86em; background: var(--accent-soft); color: var(--accent); padding: 1px 6px; border-radius: 5px; }
+
+.window { border-radius: 16px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); background: var(--card); max-width: 780px; margin: 0 auto; }
+.window img { display: block; width: 100%; height: auto; }
+
+.steps { counter-reset: step; list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+.steps li::before { content: counter(step); width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 14px; display: grid; place-items: center; }
+.steps li p { margin: 3px 0 0; color: var(--muted); }
+
+.req { list-style: none; padding: 0; margin: 0 0 26px; display: grid; gap: 10px; }
+.req li { position: relative; padding-left: 20px; }
+.req li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.req code { background: var(--code-bg); padding: 1px 6px; border-radius: 5px; font-size: 0.88em; }
+.term { background: #1c1c1e; color: #f5f5f7; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08); }
+.term .bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.dots { display: flex; gap: 7px; }
+.dots i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.dots i:nth-child(2) { background: #febc2e; }
+.dots i:nth-child(3) { background: #28c840; }
+.copy { font: 600 12.5px -apple-system, system-ui, sans-serif; color: #f5f5f7; background: rgba(255, 255, 255, 0.1); border: 0; border-radius: 7px; padding: 5px 11px; cursor: pointer; }
+.copy:hover { background: rgba(255, 255, 255, 0.18); }
+.term pre { margin: 0; padding: 18px 20px; overflow-x: auto; font-size: 14px; line-height: 1.7; }
+.term .p { color: #8f8dff; user-select: none; }
+.note { color: var(--muted); font-size: 15px; margin-top: 18px; }
+
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.limits { margin: 0; padding-left: 20px; color: var(--muted); }
+.limits li { margin-bottom: 8px; }
+
+footer { border-top: 1px solid var(--line); padding: 32px 0 44px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+@media (max-width: 860px) {
+  .demo { grid-template-columns: 1fr; }
+  .bridge { flex-direction: row; justify-content: center; flex-wrap: wrap; }
+  .arrow { transform: rotate(90deg); }
+  .grid, .split, .two { grid-template-columns: 1fr; }
+  .split { gap: 32px; }
+  nav ul { display: none; }
+  .hero { padding-top: 56px; }
+  section { padding: 64px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .spin { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f8dff"/><stop offset="1" stop-color="#5e5ce6"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lg1)"/><path d="M12 45c4-7 9-10 11-7s-4 8 0 9 8-5 11-8" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 38 49 23a3.2 3.2 0 0 1 4.5 4.5L38.5 42.5 32 44z" fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round"/></svg>
+      Reformule
+    </a>
+    <ul>
+      <li><a href="#usage">Utilisation</a></li>
+      <li><a href="#forme">Mise en forme</a></li>
+      <li><a href="#installation">Installation</a></li>
+      <li><a href="https://github.com/mickadoua/reformule">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f8dff"/><stop offset="1" stop-color="#5e5ce6"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lg2)"/><path d="M12 45c4-7 9-10 11-7s-4 8 0 9 8-5 11-8" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 38 49 23a3.2 3.2 0 0 1 4.5 4.5L38.5 42.5 32 44z" fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round"/></svg>
+    <span class="eyebrow">App macOS · Licence MIT</span>
+    <h1>Le bon texte,<br><em>sans casser la mise en forme.</em></h1>
+    <p class="lede">Reformule corrige et reformule le texte de n'importe quel champ sur macOS, de Slack à Jira, d'un raccourci clavier ou d'un clic droit. Le gras, les liens, le code et les listes restent à leur place.</p>
+    <div class="cta">
+      <a class="btn primary" href="#installation">Installer</a>
+      <a class="btn ghost" href="https://github.com/mickadoua/reformule">Code source</a>
+    </div>
+
+    <div class="demo" aria-label="Exemple avant et après correction">
+      <article class="msg before">
+        <header><span class="tag">Avant</span></header>
+        <p>Salut l'équipe,</p>
+        <p>la mise en prod de <b>vendredi</b> est <span class="x">decalé a</span> lundi, le temps qu'on <span class="x">regle</span> le souci de cache. <span class="x">Tout</span> les détails sont dans <a href="#" tabindex="-1">le ticket</a>.</p>
+        <ul>
+          <li><span class="x">penser a</span> vider le cache avec <code>make clean</code> avant de tester</li>
+          <li>si <span class="x">sa</span> bloque toujours, <span class="x">faite moi</span> signe</li>
+        </ul>
+        <p><span class="x">merci a</span> tous !</p>
+      </article>
+      <div class="bridge" aria-hidden="true">
+        <div class="keys"><span class="key">⌘ droit</span><span class="key">/</span></div>
+        <div class="hud"><span class="spin"></span>Reformulation…</div>
+        <div class="arrow">→</div>
+      </div>
+      <article class="msg after">
+        <header><span class="tag">Après</span></header>
+        <p>Salut l'équipe,</p>
+        <p><span class="ok">La</span> mise en prod de <b>vendredi</b> est <span class="ok">décalée à</span> lundi, le temps qu'on <span class="ok">règle</span> le souci de cache. <span class="ok">Tous</span> les détails sont dans <a href="#" tabindex="-1">le ticket</a>.</p>
+        <ul>
+          <li><span class="ok">Pensez à</span> vider le cache avec <code>make clean</code> avant de tester.</li>
+          <li><span class="ok">Si ça</span> bloque toujours, <span class="ok">faites-moi</span> signe.</li>
+        </ul>
+        <p><span class="ok">Merci à</span> tous !</p>
+      </article>
+    </div>
+    <p class="caption">Résultat réel du mode « Corriger et reformuler », obtenu en 3,4 s avec Opus. Le gras, le lien, le code et la liste n'ont pas bougé.</p>
+  </div>
+</header>
+
+<section id="usage" class="alt">
+  <div class="wrap">
+    <p class="kicker">Utilisation</p>
+    <h2>Là où le texte est déjà.</h2>
+    <p class="intro">Pas de copier-coller vers un autre outil : la correction se fait sur place, dans le champ en cours d'écriture.</p>
+    <div class="grid">
+      <div class="card">
+        <div class="icon i1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 10h.01M10 10h.01M13.5 10h.01M17 10h.01M8 14h8"/></svg></div>
+        <h3>Raccourci clavier</h3>
+        <p>⌘ droit + / par défaut, ou la combinaison de son choix. Corrige la sélection, ou tout le champ s'il n'y en a pas, puis recolle le résultat.</p>
+      </div>
+      <div class="card">
+        <div class="icon i2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="13" height="15" rx="2.5"/><path d="M6.5 7.5h6M6.5 11h6M6.5 14.5h3.5"/><path d="m14 13 7 2.6-3 1.2-1.2 3z" fill="currentColor"/></svg></div>
+        <h3>Clic droit</h3>
+        <p>« Reformule : corriger et reformuler » et « Reformule : corriger seulement », dans le menu Services de la sélection. Sans toucher au presse-papiers.</p>
+      </div>
+      <div class="card">
+        <div class="icon i3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h10M4 17h7"/><path d="m15 17 2 2 4-4"/></svg></div>
+        <h3>Deux modes</h3>
+        <p>Corriger et reformuler pour des tournures plus naturelles, ou corriger seulement pour changer le moins de mots possible. Le ton et la langue sont gardés.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="forme">
+  <div class="wrap split">
+    <div>
+      <p class="kicker">Mise en forme</p>
+      <h2>La structure ne passe jamais par le modèle.</h2>
+      <p class="intro">Reformule découpe le texte en blocs et garde lui-même les paragraphes, les puces et l'imbrication. Le modèle ne reçoit que le texte de chaque bloc.</p>
+      <ul class="chips">
+        <li>Gras</li><li>Italique</li><li>Liens</li><li>Code</li><li>Listes à puces</li><li>Listes numérotées</li><li>Listes imbriquées</li>
+      </ul>
+      <ul class="checks">
+        <li><strong>URL et code protégés.</strong> Ils sont remplacés par des jetons que le modèle doit recopier tels quels.</li>
+        <li><strong>Chaque bloc est vérifié.</strong> Si ses marqueurs ou ses jetons ont changé, il reste tel qu'il était.</li>
+        <li><strong>Rien de risqué n'est touché.</strong> Un texte avec images ou tableaux n'est pas modifié du tout.</li>
+      </ul>
+    </div>
+    <div class="blocks" aria-label="Exemple de découpage en blocs">
+      <div class="b"><span class="k">Paragraphe</span><span>Salut l'équipe,</span></div>
+      <div class="b"><span class="k">Paragraphe</span><span>la mise en prod de **vendredi** est decalé a lundi, […] dans [le ticket](<span class="tok">⟦0⟧</span>).</span></div>
+      <div class="b"><span class="k">Puce</span><span>penser a vider le cache avec <span class="tok">⟦1⟧</span> avant de tester</span></div>
+      <div class="b"><span class="k">Puce</span><span>si sa bloque toujours, faite moi signe</span></div>
+      <div class="b"><span class="k">Paragraphe</span><span>merci a tous !</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <p class="kicker">Réglages</p>
+    <h2>Une fenêtre, tous les choix.</h2>
+    <p class="intro">Modèle (Fable, Opus, Sonnet ou Haiku), effort, mode, raccourci et ouverture à la session. La fenêtre s'ouvre depuis la barre des menus, ou en rouvrant l'app quand l'encoche cache son icône.</p>
+    <div class="window">
+      <picture>
+        <source srcset="reglages-sombre.png" media="(prefers-color-scheme: dark)">
+        <img src="reglages-clair.png" width="780" height="520" alt="Fenêtre Réglages de Reformule, section Correction : modèle, effort et mode" loading="lazy">
+      </picture>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="kicker">Fonctionnement</p>
+    <h2>Cinq étapes, quelques secondes.</h2>
+    <p class="intro">Environ 3 à 4 secondes avec Opus en effort faible, une dizaine avec Fable.</p>
+    <ol class="steps">
+      <li><div><strong>Copie</strong><p>Reformule envoie ⌘C. Si rien n'est sélectionné, il sélectionne tout le champ puis copie.</p></div></li>
+      <li><div><strong>Découpage</strong><p>Le contenu devient une liste de blocs ; les URL et le code sont remplacés par des jetons.</p></div></li>
+      <li><div><strong>Correction</strong><p>Claude Code reçoit les blocs et en renvoie autant, sans outils, serveurs MCP ni réglages personnels.</p></div></li>
+      <li><div><strong>Vérification</strong><p>Un bloc dont la mise en forme a changé est gardé tel quel.</p></div></li>
+      <li><div><strong>Collage</strong><p>Le HTML, le RTF et le texte brut sont reconstruits et collés, puis le presse-papiers d'origine est restauré.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<section id="installation" class="alt">
+  <div class="wrap split">
+    <div>
+      <p class="kicker">Installation</p>
+      <h2>Compilée sur sa propre machine.</h2>
+      <ul class="req">
+        <li>macOS 26 sur Apple silicon</li>
+        <li><a href="https://code.claude.com">Claude Code</a> installé et connecté</li>
+        <li>Les outils en ligne de commande Xcode (<code>xcode-select --install</code>)</li>
+      </ul>
+      <p class="note">Autoriser ensuite Reformule dans Réglages Système &gt; Confidentialité et sécurité &gt; Accessibilité, pour le raccourci clavier. L'app étant signée ad hoc, l'autorisation est à redonner après chaque compilation. Le clic droit s'en passe.</p>
+    </div>
+    <div class="term">
+      <div class="bar"><div class="dots"><i></i><i></i><i></i></div><button class="copy" type="button" data-copy="install">Copier</button></div>
+<pre id="install"><span class="p">$ </span>git clone https://github.com/mickadoua/reformule.git
+<span class="p">$ </span>cd reformule
+<span class="p">$ </span>./build.sh install
+<span class="p">$ </span>open ~/Applications/Reformule.app</pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap two">
+    <div class="card">
+      <h3>Confidentialité</h3>
+      <p>Le texte part chez Anthropic par Claude Code, avec le compte connecté, et compte sur son abonnement ou sa facturation. Reformule n'a ni serveur ni télémétrie, et ne conserve aucune session.</p>
+    </div>
+    <div class="card">
+      <h3>Limites</h3>
+      <ul class="limits">
+        <li>Textes avec images, émojis en image ou tableaux : rien n'est modifié.</li>
+        <li>Le souligné, le barré et les couleurs sont perdus.</li>
+        <li>Les apps qui remplacent le menu contextuel, comme beaucoup d'apps Electron, n'affichent pas les Services : le raccourci y fonctionne.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Reformule · <a href="https://github.com/mickadoua/reformule/blob/main/LICENSE">Licence MIT</a></span>
+    <a href="https://github.com/mickadoua/reformule">github.com/mickadoua/reformule</a>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll("[data-copy]").forEach(function (button) {
+  button.addEventListener("click", function () {
+    var text = document.getElementById(button.dataset.copy).innerText.replace(/^\$ /gm, "");
+    navigator.clipboard.writeText(text).then(function () {
+      button.textContent = "Copié";
+      setTimeout(function () { button.textContent = "Copier"; }, 1500);
+    }, function () {});
+  });
+});
+</script>
+</body>
+</html>
