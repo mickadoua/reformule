@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Reformule</title>
-<meta name="description" content="Reformule corrige et reformule le texte de n'importe quel champ sur macOS, d'un raccourci ou d'un clic droit, sans casser la mise en forme.">
+<meta name="description" content="Reformule corrects and rephrases the text of any field on macOS, from a shortcut or a right-click, without breaking its formatting.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%238f8dff'/%3E%3Cstop offset='1' stop-color='%235e5ce6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Cpath d='M12 45c4-7 9-10 11-7s-4 8 0 9 8-5 11-8' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M34 38 49 23a3.2 3.2 0 0 1 4.5 4.5L38.5 42.5 32 44z' fill='none' stroke='white' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
 :root {
@@ -184,9 +184,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       Reformule
     </a>
     <ul>
-      <li><a href="#usage">Utilisation</a></li>
-      <li><a href="#forme">Mise en forme</a></li>
-      <li><a href="#installation">Installation</a></li>
+      <li><a href="#usage">Usage</a></li>
+      <li><a href="#formatting">Formatting</a></li>
+      <li><a href="#install">Install</a></li>
       <li><a href="https://github.com/mickadoua/reformule">GitHub</a></li>
     </ul>
   </div>
@@ -195,104 +195,104 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 <header class="hero">
   <div class="wrap">
     <svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f8dff"/><stop offset="1" stop-color="#5e5ce6"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lg2)"/><path d="M12 45c4-7 9-10 11-7s-4 8 0 9 8-5 11-8" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 38 49 23a3.2 3.2 0 0 1 4.5 4.5L38.5 42.5 32 44z" fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round"/></svg>
-    <span class="eyebrow">App macOS · Licence MIT</span>
-    <h1>Le bon texte,<br><em>sans casser la mise en forme.</em></h1>
-    <p class="lede">Reformule corrige et reformule le texte de n'importe quel champ sur macOS, de Slack à Jira, d'un raccourci clavier ou d'un clic droit. Le gras, les liens, le code et les listes restent à leur place.</p>
+    <span class="eyebrow">macOS app · MIT license</span>
+    <h1>Better text,<br><em>formatting intact.</em></h1>
+    <p class="lede">Reformule corrects and rephrases the text of any field on macOS, from Slack to Jira, with a keyboard shortcut or a right-click. Bold, links, code and lists stay exactly where they were.</p>
     <div class="cta">
-      <a class="btn primary" href="#installation">Installer</a>
-      <a class="btn ghost" href="https://github.com/mickadoua/reformule">Code source</a>
+      <a class="btn primary" href="#install">Install</a>
+      <a class="btn ghost" href="https://github.com/mickadoua/reformule">Source code</a>
     </div>
 
-    <div class="demo" aria-label="Exemple avant et après correction">
+    <div class="demo" aria-label="Example before and after correction">
       <article class="msg before">
-        <header><span class="tag">Avant</span></header>
-        <p>Salut l'équipe,</p>
-        <p>la mise en prod de <b>vendredi</b> est <span class="x">decalé a</span> lundi, le temps qu'on <span class="x">regle</span> le souci de cache. <span class="x">Tout</span> les détails sont dans <a href="#" tabindex="-1">le ticket</a>.</p>
+        <header><span class="tag">Before</span></header>
+        <p>Hi team,</p>
+        <p><span class="x">the</span> release <span class="x">planed</span> for <b><span class="x">friday</span></b> <span class="x">is</span> pushed to <span class="x">monday,</span> while we fix <span class="x">teh</span> cache issue. All the details are in <a href="#" tabindex="-1">the ticket</a>.</p>
         <ul>
-          <li><span class="x">penser a</span> vider le cache avec <code>make clean</code> avant de tester</li>
-          <li>si <span class="x">sa</span> bloque toujours, <span class="x">faite moi</span> signe</li>
+          <li><span class="x">dont</span> forget to clear the cache with <code>make clean</code> before testing</li>
+          <li><span class="x">if its</span> still broken, let me know</li>
         </ul>
-        <p><span class="x">merci a</span> tous !</p>
+        <p><span class="x">thanks everyone !</span></p>
       </article>
       <div class="bridge" aria-hidden="true">
-        <div class="keys"><span class="key">⌘ droit</span><span class="key">/</span></div>
+        <div class="keys"><span class="key">right ⌘</span><span class="key">/</span></div>
         <div class="hud"><span class="spin"></span>Reformulation…</div>
         <div class="arrow">→</div>
       </div>
       <article class="msg after">
-        <header><span class="tag">Après</span></header>
-        <p>Salut l'équipe,</p>
-        <p><span class="ok">La</span> mise en prod de <b>vendredi</b> est <span class="ok">décalée à</span> lundi, le temps qu'on <span class="ok">règle</span> le souci de cache. <span class="ok">Tous</span> les détails sont dans <a href="#" tabindex="-1">le ticket</a>.</p>
+        <header><span class="tag">After</span></header>
+        <p>Hi team,</p>
+        <p><span class="ok">The</span> release <span class="ok">planned</span> for <b><span class="ok">Friday</span></b> <span class="ok">has been</span> pushed to <span class="ok">Monday</span> while we fix <span class="ok">the</span> cache issue. All the details are in <a href="#" tabindex="-1">the ticket</a>.</p>
         <ul>
-          <li><span class="ok">Pensez à</span> vider le cache avec <code>make clean</code> avant de tester.</li>
-          <li><span class="ok">Si ça</span> bloque toujours, <span class="ok">faites-moi</span> signe.</li>
+          <li><span class="ok">Don't</span> forget to clear the cache with <code>make clean</code> before <span class="ok">testing.</span></li>
+          <li><span class="ok">If it's</span> still broken, let me <span class="ok">know.</span></li>
         </ul>
-        <p><span class="ok">Merci à</span> tous !</p>
+        <p><span class="ok">Thanks, everyone!</span></p>
       </article>
     </div>
-    <p class="caption">Résultat réel du mode « Corriger et reformuler », obtenu en 3,4 s avec Opus. Le gras, le lien, le code et la liste n'ont pas bougé.</p>
+    <p class="caption">Real output of the correct-and-rephrase mode, produced in 3.2 s with Opus. The bold, link, code and list were left untouched.</p>
   </div>
 </header>
 
 <section id="usage" class="alt">
   <div class="wrap">
-    <p class="kicker">Utilisation</p>
-    <h2>Là où le texte est déjà.</h2>
-    <p class="intro">Pas de copier-coller vers un autre outil : la correction se fait sur place, dans le champ en cours d'écriture.</p>
+    <p class="kicker">Usage</p>
+    <h2>Right where the text already is.</h2>
+    <p class="intro">No copying to another tool and back: the correction happens in place, in the field you are typing in.</p>
     <div class="grid">
       <div class="card">
         <div class="icon i1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 10h.01M10 10h.01M13.5 10h.01M17 10h.01M8 14h8"/></svg></div>
-        <h3>Raccourci clavier</h3>
-        <p>⌘ droit + / par défaut, ou la combinaison de son choix. Corrige la sélection, ou tout le champ s'il n'y en a pas, puis recolle le résultat.</p>
+        <h3>Keyboard shortcut</h3>
+        <p>Right ⌘ + / by default, or any combination you like. Corrects the selection, or the whole field when nothing is selected, then pastes the result back.</p>
       </div>
       <div class="card">
         <div class="icon i2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="13" height="15" rx="2.5"/><path d="M6.5 7.5h6M6.5 11h6M6.5 14.5h3.5"/><path d="m14 13 7 2.6-3 1.2-1.2 3z" fill="currentColor"/></svg></div>
-        <h3>Clic droit</h3>
-        <p>« Reformule : corriger et reformuler » et « Reformule : corriger seulement », dans le menu Services de la sélection. Sans toucher au presse-papiers.</p>
+        <h3>Right-click</h3>
+        <p>Two entries in the Services menu of any selection, to correct and rephrase or to correct only. The clipboard is never touched.</p>
       </div>
       <div class="card">
         <div class="icon i3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h10M4 17h7"/><path d="m15 17 2 2 4-4"/></svg></div>
-        <h3>Deux modes</h3>
-        <p>Corriger et reformuler pour des tournures plus naturelles, ou corriger seulement pour changer le moins de mots possible. Le ton et la langue sont gardés.</p>
+        <h3>Two modes</h3>
+        <p>Correct and rephrase for more natural wording, or correct only to change as few words as possible. Tone and language are always kept.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section id="forme">
+<section id="formatting">
   <div class="wrap split">
     <div>
-      <p class="kicker">Mise en forme</p>
-      <h2>La structure ne passe jamais par le modèle.</h2>
-      <p class="intro">Reformule découpe le texte en blocs et garde lui-même les paragraphes, les puces et l'imbrication. Le modèle ne reçoit que le texte de chaque bloc.</p>
+      <p class="kicker">Formatting</p>
+      <h2>The structure never goes through the model.</h2>
+      <p class="intro">Reformule splits the text into blocks and keeps paragraphs, bullets and nesting itself. The model only receives the text of each block.</p>
       <ul class="chips">
-        <li>Gras</li><li>Italique</li><li>Liens</li><li>Code</li><li>Listes à puces</li><li>Listes numérotées</li><li>Listes imbriquées</li>
+        <li>Bold</li><li>Italic</li><li>Links</li><li>Code</li><li>Bulleted lists</li><li>Numbered lists</li><li>Nested lists</li>
       </ul>
       <ul class="checks">
-        <li><strong>URL et code protégés.</strong> Ils sont remplacés par des jetons que le modèle doit recopier tels quels.</li>
-        <li><strong>Chaque bloc est vérifié.</strong> Si ses marqueurs ou ses jetons ont changé, il reste tel qu'il était.</li>
-        <li><strong>Rien de risqué n'est touché.</strong> Un texte avec images ou tableaux n'est pas modifié du tout.</li>
+        <li><strong>URLs and code are protected.</strong> They are swapped for tokens the model has to copy back as is.</li>
+        <li><strong>Every block is checked.</strong> If its markers or tokens changed, it stays as it was.</li>
+        <li><strong>Nothing risky is touched.</strong> Text with images or tables is not modified at all.</li>
       </ul>
     </div>
-    <div class="blocks" aria-label="Exemple de découpage en blocs">
-      <div class="b"><span class="k">Paragraphe</span><span>Salut l'équipe,</span></div>
-      <div class="b"><span class="k">Paragraphe</span><span>la mise en prod de **vendredi** est decalé a lundi, […] dans [le ticket](<span class="tok">⟦0⟧</span>).</span></div>
-      <div class="b"><span class="k">Puce</span><span>penser a vider le cache avec <span class="tok">⟦1⟧</span> avant de tester</span></div>
-      <div class="b"><span class="k">Puce</span><span>si sa bloque toujours, faite moi signe</span></div>
-      <div class="b"><span class="k">Paragraphe</span><span>merci a tous !</span></div>
+    <div class="blocks" aria-label="Example of the split into blocks">
+      <div class="b"><span class="k">Paragraph</span><span>Hi team,</span></div>
+      <div class="b"><span class="k">Paragraph</span><span>the release planed for **friday** is pushed to monday, […] in [the ticket](<span class="tok">⟦0⟧</span>).</span></div>
+      <div class="b"><span class="k">Bullet</span><span>dont forget to clear the cache with <span class="tok">⟦1⟧</span> before testing</span></div>
+      <div class="b"><span class="k">Bullet</span><span>if its still broken, let me know</span></div>
+      <div class="b"><span class="k">Paragraph</span><span>thanks everyone !</span></div>
     </div>
   </div>
 </section>
 
 <section class="alt">
   <div class="wrap">
-    <p class="kicker">Réglages</p>
-    <h2>Une fenêtre, tous les choix.</h2>
-    <p class="intro">Modèle (Fable, Opus, Sonnet ou Haiku), effort, mode, raccourci et ouverture à la session. La fenêtre s'ouvre depuis la barre des menus, ou en rouvrant l'app quand l'encoche cache son icône.</p>
+    <p class="kicker">Settings</p>
+    <h2>One window, every choice.</h2>
+    <p class="intro">Model (Fable, Opus, Sonnet or Haiku), effort, mode, shortcut and launch at login. The window opens from the menu bar, or by opening the app again when the notch hides its icon. The interface is in French for now.</p>
     <div class="window">
       <picture>
         <source srcset="reglages-sombre.png" media="(prefers-color-scheme: dark)">
-        <img src="reglages-clair.png" width="780" height="520" alt="Fenêtre Réglages de Reformule, section Correction : modèle, effort et mode" loading="lazy">
+        <img src="reglages-clair.png" width="780" height="520" alt="Reformule settings window, Correction pane: model, effort and mode (interface in French)" loading="lazy">
       </picture>
     </div>
   </div>
@@ -300,34 +300,34 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 
 <section>
   <div class="wrap">
-    <p class="kicker">Fonctionnement</p>
-    <h2>Cinq étapes, quelques secondes.</h2>
-    <p class="intro">Environ 3 à 4 secondes avec Opus en effort faible, une dizaine avec Fable.</p>
+    <p class="kicker">How it works</p>
+    <h2>Five steps, a few seconds.</h2>
+    <p class="intro">About 3 to 4 seconds with Opus at low effort, around ten with Fable.</p>
     <ol class="steps">
-      <li><div><strong>Copie</strong><p>Reformule envoie ⌘C. Si rien n'est sélectionné, il sélectionne tout le champ puis copie.</p></div></li>
-      <li><div><strong>Découpage</strong><p>Le contenu devient une liste de blocs ; les URL et le code sont remplacés par des jetons.</p></div></li>
-      <li><div><strong>Correction</strong><p>Claude Code reçoit les blocs et en renvoie autant, sans outils, serveurs MCP ni réglages personnels.</p></div></li>
-      <li><div><strong>Vérification</strong><p>Un bloc dont la mise en forme a changé est gardé tel quel.</p></div></li>
-      <li><div><strong>Collage</strong><p>Le HTML, le RTF et le texte brut sont reconstruits et collés, puis le presse-papiers d'origine est restauré.</p></div></li>
+      <li><div><strong>Copy</strong><p>Reformule sends ⌘C. If nothing is selected, it selects the whole field and copies again.</p></div></li>
+      <li><div><strong>Split</strong><p>The content becomes a list of blocks; URLs and code are replaced by tokens.</p></div></li>
+      <li><div><strong>Correct</strong><p>Claude Code receives the blocks and returns as many, with no tools, MCP servers or personal settings.</p></div></li>
+      <li><div><strong>Check</strong><p>A block whose formatting changed is kept as it was.</p></div></li>
+      <li><div><strong>Paste</strong><p>HTML, RTF and plain text are rebuilt and pasted, then the original clipboard is restored.</p></div></li>
     </ol>
   </div>
 </section>
 
-<section id="installation" class="alt">
+<section id="install" class="alt">
   <div class="wrap split">
     <div>
-      <p class="kicker">Installation</p>
-      <h2>Compilée sur sa propre machine.</h2>
+      <p class="kicker">Install</p>
+      <h2>Built on your own Mac.</h2>
       <ul class="req">
-        <li>macOS 26 sur Apple silicon</li>
-        <li><a href="https://code.claude.com">Claude Code</a> installé et connecté</li>
-        <li>Les outils en ligne de commande Xcode (<code>xcode-select --install</code>)</li>
+        <li>macOS 26 on Apple silicon</li>
+        <li><a href="https://code.claude.com">Claude Code</a> installed and signed in</li>
+        <li>Xcode Command Line Tools (<code>xcode-select --install</code>)</li>
       </ul>
-      <p class="note">Autoriser ensuite Reformule dans Réglages Système &gt; Confidentialité et sécurité &gt; Accessibilité, pour le raccourci clavier. L'app étant signée ad hoc, l'autorisation est à redonner après chaque compilation. Le clic droit s'en passe.</p>
+      <p class="note">Then allow Reformule in System Settings &gt; Privacy &amp; Security &gt; Accessibility, for the keyboard shortcut. The app is signed ad hoc, so the permission has to be granted again after every build. The right-click menu works without it.</p>
     </div>
     <div class="term">
-      <div class="bar"><div class="dots"><i></i><i></i><i></i></div><button class="copy" type="button" data-copy="install">Copier</button></div>
-<pre id="install"><span class="p">$ </span>git clone https://github.com/mickadoua/reformule.git
+      <div class="bar"><div class="dots"><i></i><i></i><i></i></div><button class="copy" type="button" data-copy="install-cmd">Copy</button></div>
+<pre id="install-cmd"><span class="p">$ </span>git clone https://github.com/mickadoua/reformule.git
 <span class="p">$ </span>cd reformule
 <span class="p">$ </span>./build.sh install
 <span class="p">$ </span>open ~/Applications/Reformule.app</pre>
@@ -338,15 +338,15 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 <section>
   <div class="wrap two">
     <div class="card">
-      <h3>Confidentialité</h3>
-      <p>Le texte part chez Anthropic par Claude Code, avec le compte connecté, et compte sur son abonnement ou sa facturation. Reformule n'a ni serveur ni télémétrie, et ne conserve aucune session.</p>
+      <h3>Privacy</h3>
+      <p>Text goes to Anthropic through Claude Code, with the signed-in account, and counts against its subscription or billing. Reformule has no server and no telemetry, and keeps no session.</p>
     </div>
     <div class="card">
-      <h3>Limites</h3>
+      <h3>Limitations</h3>
       <ul class="limits">
-        <li>Textes avec images, émojis en image ou tableaux : rien n'est modifié.</li>
-        <li>Le souligné, le barré et les couleurs sont perdus.</li>
-        <li>Les apps qui remplacent le menu contextuel, comme beaucoup d'apps Electron, n'affichent pas les Services : le raccourci y fonctionne.</li>
+        <li>Text with images, image emoji or tables: nothing is modified.</li>
+        <li>Underline, strikethrough and colors are lost.</li>
+        <li>Apps that replace the context menu, like many Electron apps, do not show Services: the shortcut works there.</li>
       </ul>
     </div>
   </div>
@@ -354,7 +354,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 
 <footer>
   <div class="wrap">
-    <span>Reformule · <a href="https://github.com/mickadoua/reformule/blob/main/LICENSE">Licence MIT</a></span>
+    <span>Reformule · <a href="https://github.com/mickadoua/reformule/blob/main/LICENSE">MIT license</a></span>
     <a href="https://github.com/mickadoua/reformule">github.com/mickadoua/reformule</a>
   </div>
 </footer>
@@ -364,8 +364,8 @@ document.querySelectorAll("[data-copy]").forEach(function (button) {
   button.addEventListener("click", function () {
     var text = document.getElementById(button.dataset.copy).innerText.replace(/^\$ /gm, "");
     navigator.clipboard.writeText(text).then(function () {
-      button.textContent = "Copié";
-      setTimeout(function () { button.textContent = "Copier"; }, 1500);
+      button.textContent = "Copied";
+      setTimeout(function () { button.textContent = "Copy"; }, 1500);
     }, function () {});
   });
 });

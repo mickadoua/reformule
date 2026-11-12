@@ -1,68 +1,72 @@
 # Reformule
 
-Corrige et reformule le texte du champ actif, dans n'importe quelle app macOS, sans perdre la mise en forme. [Page de présentation](https://mickadoua.github.io/reformule/)
+Corrects and rephrases the text of the focused field, in any macOS app, without losing its formatting. [Website](https://mickadoua.github.io/reformule/)
 
-Un raccourci (⌘ droit + / par défaut) copie la sélection, ou tout le champ s'il n'y en a pas, la fait corriger par Claude via Claude Code, puis recolle le résultat à la place. Le gras, l'italique, les liens, le code et les listes sont conservés.
+A shortcut (right ⌘ + / by default) copies the selection, or the whole field when nothing is selected, has it corrected by Claude through Claude Code, then pastes the result back in place. Bold, italic, links, code and lists are kept.
 
-Les mêmes corrections sont proposées au clic droit sur une sélection, dans le sous-menu Services : « Reformule : corriger et reformuler » et « Reformule : corriger seulement ». Elles remplacent la sélection sans passer par le presse-papiers et ne demandent pas l'autorisation Accessibilité. Si elles n'apparaissent pas, les activer dans Réglages Système > Clavier > Raccourcis clavier > Services > Texte.
+The same corrections are available from the right-click menu on a selection, under Services: "Reformule : corriger et reformuler" (correct and rephrase) and "Reformule : corriger seulement" (correct only). They replace the selection without going through the clipboard and do not need the Accessibility permission. If they do not show up, enable them in System Settings > Keyboard > Keyboard Shortcuts > Services > Text.
 
-## Prérequis
+The app interface is in French for now. Text is corrected in its own language and never translated.
 
-- macOS 26 sur Apple silicon
-- [Claude Code](https://code.claude.com) installé et connecté, avec `claude` dans `~/.local/bin`, `/opt/homebrew/bin` ou `/usr/local/bin`
-- Les outils en ligne de commande Xcode (`xcode-select --install`)
+## Requirements
 
-## Installation
+- macOS 26 on Apple silicon
+- [Claude Code](https://code.claude.com) installed and signed in, with `claude` in `~/.local/bin`, `/opt/homebrew/bin` or `/usr/local/bin`
+- Xcode Command Line Tools (`xcode-select --install`)
+
+## Install
 
 ```sh
+git clone https://github.com/mickadoua/reformule.git
+cd reformule
 ./build.sh install
 open ~/Applications/Reformule.app
 ```
 
-Autoriser ensuite Reformule dans Réglages Système > Confidentialité et sécurité > Accessibilité : l'app en a besoin pour lire le raccourci et envoyer ⌘C / ⌘V.
+Then allow Reformule in System Settings > Privacy & Security > Accessibility: the app needs it to read the shortcut and send ⌘C / ⌘V.
 
-L'app est signée ad hoc, donc macOS la considère comme une nouvelle app après chaque compilation. Il faut alors retirer l'ancienne autorisation et la redonner :
+The app is signed ad hoc, so macOS treats it as a new app after every build. Remove the old permission and grant it again:
 
 ```sh
 tccutil reset Accessibility io.github.mickadoua.reformule
 ```
 
-## Réglages
+## Settings
 
-Tout se règle dans la fenêtre Réglages, ouverte par l'icône de la barre des menus (Réglages…, ⌘,) ou en rouvrant Reformule depuis Spotlight ou le Finder, utile quand l'encoche cache l'icône :
+Everything is set in the Settings window, opened from the menu bar icon (Réglages…, ⌘,) or by opening Reformule again from Spotlight or the Finder, which helps when the notch hides the icon:
 
-- **Général** : lancement à l'ouverture de session, état de l'autorisation Accessibilité
-- **Correction** : modèle (Fable, Opus par défaut, Sonnet ou Haiku, dans leur dernière version via les alias de Claude Code), effort (faible par défaut, moyen ou élevé), mode (corriger et reformuler, ou corriger seulement)
-- **Raccourcis** : raccourci enregistré au clavier, en distinguant les touches de gauche et de droite, et rappel des Services du clic droit
+- **Général** (General): launch at login, Accessibility permission status
+- **Correction**: model (Fable, Opus by default, Sonnet or Haiku, each in its latest version through Claude Code aliases), effort (low by default, medium or high), mode (correct and rephrase, or correct only)
+- **Raccourcis** (Shortcuts): shortcut recorded from the keyboard, telling left and right keys apart, and a reminder of the right-click Services
 
-## Fonctionnement
+## How it works
 
-1. Reformule envoie ⌘C. Si rien n'est copié, il sélectionne tout le champ (⌘A) puis copie.
-2. Il découpe le contenu en blocs (paragraphes, puces, numéros) et garde lui-même la structure. Les URL et le code sont remplacés par des jetons que le modèle doit recopier.
-3. `claude -p` reçoit les blocs et renvoie autant de blocs corrigés, au format JSON. L'appel n'utilise ni outils, ni serveurs MCP, ni CLAUDE.md, ni les hooks de l'utilisateur.
-4. Un bloc dont les marqueurs de mise en forme ou les jetons ont changé reste tel quel.
-5. Reformule reconstruit le HTML, le RTF et le texte brut, colle avec ⌘V, puis restaure le presse-papiers d'origine.
+1. Reformule sends ⌘C. If nothing is copied, it selects the whole field (⌘A) and copies again.
+2. It splits the content into blocks (paragraphs, bullets, numbered items) and keeps the structure itself. URLs and code are replaced by tokens the model must copy back.
+3. `claude -p` receives the blocks and returns as many corrected blocks, as JSON. The call uses no tools, no MCP servers, no CLAUDE.md and none of the user's hooks.
+4. A block whose formatting markers or tokens changed is left as it was.
+5. Reformule rebuilds the HTML, RTF and plain text, pastes with ⌘V, then restores the original clipboard.
 
-## Confidentialité
+## Privacy
 
-Le texte est envoyé à Anthropic par Claude Code, avec le compte connecté, et décompté sur son abonnement ou sa facturation.
+Text is sent to Anthropic by Claude Code, with the signed-in account, and counts against its subscription or billing.
 
-## Limites
+## Limitations
 
-- Les contenus avec images, émojis sous forme d'image ou tableaux ne sont pas modifiés.
-- Le souligné, le barré et les couleurs sont perdus.
-- Les mentions (@quelqu'un) de Slack ou Jira ne reçoivent pas de traitement particulier.
-- Dans VS Code et JetBrains, ⌘C sans sélection copie la ligne courante : c'est elle qui est corrigée.
-- Les apps qui remplacent le menu contextuel, comme beaucoup d'apps Electron, n'affichent pas les Services : seul le raccourci y fonctionne.
+- Content with images, image emoji or tables is not modified.
+- Underline, strikethrough and colors are lost.
+- Slack and Jira mentions (@someone) get no special handling.
+- In VS Code and JetBrains, ⌘C without a selection copies the current line: that line is what gets corrected.
+- Apps that replace the context menu, like many Electron apps, do not show Services: only the shortcut works there.
 
-## Tester sans raccourci
+## Testing without the shortcut
 
 ```sh
 build/Reformule.app/Contents/MacOS/Reformule --pasteboard
 ```
 
-Traite le contenu du presse-papiers avec les réglages enregistrés et y écrit le résultat, sans Accessibilité.
+Processes the clipboard content with the saved settings and writes the result back, without Accessibility.
 
-## Licence
+## License
 
 [MIT](LICENSE)
