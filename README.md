@@ -69,4 +69,4 @@ Processes the clipboard content with the saved settings and writes the result ba
 
 ## License
 
-[MIT](LICENSE)
+[Apache License 2.0](LICENSE)
