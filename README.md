@@ -78,4 +78,4 @@ Text is sent to Anthropic by Claude Code, with the signed-in account, and counts
 
 ## License
 
-[Apache-2.0](LICENSE) (replaces MIT). Reformule is a project of [DM Consulting](https://www.dm-consulting.tech).
+[Apache-2.0](LICENSE). Reformule is a project of [DM Consulting](https://www.dm-consulting.tech).
