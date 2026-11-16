@@ -225,7 +225,7 @@ struct AboutPane: View {
             }
             Section {
                 Link("Code source", destination: URL(string: "https://github.com/mickadoua/reformule")!)
-                LabeledContent("Licence", value: "MIT")
+                LabeledContent("Licence", value: "Apache-2.0")
             }
         }
     }
